@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vishvesh.capstone.entity.Product;
 import com.vishvesh.capstone.repository.ProductRepository;
 
-//@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 //@RequestMapping("/api")
 public class ProductController {
@@ -64,7 +64,7 @@ public class ProductController {
 	public ResponseEntity<Product> createTutorial(@RequestBody Product product) {
 		try {
 			Product _tutorial = productRepository
-					.save(new Product(product.getTitle(), product.getSku(), product.getDescription(), 
+					.save(new Product(product.getTitle(), product.getSku(), product.getCategory(), product.getDescription(), 
 							product.getUnitPrice(), product.getImageUrl(), true, product.getUnitsInStock(),
 						 	product.getDateCreated(), product.getLastUpdated(), false));
 			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);

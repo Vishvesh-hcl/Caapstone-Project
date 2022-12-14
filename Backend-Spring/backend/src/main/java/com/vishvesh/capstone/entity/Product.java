@@ -22,6 +22,11 @@ public class Product {
     @Column(name = "sku")
     private String sku;
 
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private ProductCategory category;
+    
 	@Column(name = "description")
 	private String description;
 	
@@ -52,10 +57,11 @@ public class Product {
 
 	}
 
-	public Product(String title, String sku, String description, BigDecimal unitPrice, String imageUrl, boolean active, 
+	public Product(String title, String sku, ProductCategory category, String description, BigDecimal unitPrice, String imageUrl, boolean active, 
 			int unitsInStock, Date dateCreated, Date lastUpdated, boolean published) {
 		this.title = title;
 		this.sku = sku;
+		this.category = category;
 		this.description = description;
 		this.unitPrice = unitPrice;
 		this.imageUrl = imageUrl;
@@ -82,6 +88,14 @@ public class Product {
 	}
 	public void setSku(String sku) {
 		this.sku = sku;
+	}
+	
+	public ProductCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(ProductCategory category) {
+		this.category = category;
 	}
 
 	public String getDescription() {
@@ -150,7 +164,7 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", title=" + title + ", SKU="+ sku +", desc=" + description + ", UnitPrice="+unitPrice+", "
+		return "Product [id=" + id + ", title=" + title + ", SKU="+ sku +", category="+category+", desc=" + description + ", UnitPrice="+unitPrice+", "
 				+ "imageURL="+imageUrl+", active="+active+","
 						+ " unitsInStock="+unitsInStock+", dateCreated="+dateCreated+", lastUpdated="+lastUpdated+", "
 								+ "published=" + published + "]";

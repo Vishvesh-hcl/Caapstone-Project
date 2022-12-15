@@ -8,6 +8,9 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -22,7 +25,8 @@ public class Product {
     @Column(name = "sku")
     private String sku;
 
-
+    //@JsonIgnore
+    @JsonBackReference 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory category;

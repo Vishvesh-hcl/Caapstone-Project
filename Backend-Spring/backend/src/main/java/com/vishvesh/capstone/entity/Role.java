@@ -1,6 +1,9 @@
 package com.vishvesh.capstone.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +26,7 @@ public class Role
     @Column(nullable=false, unique=true)
     private String name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy="roles")
     private List<User> users;
 }

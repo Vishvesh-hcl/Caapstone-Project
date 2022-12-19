@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "product")
@@ -26,7 +27,7 @@ public class Product {
     private String sku;
 
     //@JsonIgnore
-    @JsonBackReference 
+    //@JsonManagedReference 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory category;

@@ -2,6 +2,8 @@ package com.vishvesh.capstone.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,4 +51,8 @@ public class User
             joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
     private List<Role> roles = new ArrayList<>();
+    
+    //@JsonBackReference
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "user_id")
+    private Set<Address> addresses;
 }

@@ -29,6 +29,7 @@ public class ProductController {
 	@Autowired
 	ProductRepository productRepository;
 
+	//Get all products Working perfect
 	@GetMapping("/products")
 	public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String title) {
 		try {
@@ -60,6 +61,7 @@ public class ProductController {
 		}
 	}
 
+	//Add products Working perfect
 	@PostMapping("/products")
 	public ResponseEntity<Product> createTutorial(@RequestBody Product product) {
 		try {
@@ -74,20 +76,27 @@ public class ProductController {
 	}
 
 	@PutMapping("/products/{id}")
-	public ResponseEntity<Product> updateTutorial(@PathVariable("id") long id, @RequestBody Product product) {
-		Optional<Product> tutorialData = productRepository.findById(id);
+	public ResponseEntity<Product> updateProduct(@PathVariable("id") long id, @RequestBody Product product) {
+		Optional<Product> productData = productRepository.findById(id);
 
-		if (tutorialData.isPresent()) {
-			Product _tutorial = tutorialData.get();
-			_tutorial.setTitle(product.getTitle());
-			_tutorial.setDescription(product.getDescription());
-			_tutorial.setPublished(product.isPublished());
-			return new ResponseEntity<>(productRepository.save(_tutorial), HttpStatus.OK);
+		if (productData.isPresent()) {
+			Product _product = productData.get();
+			_product.setTitle(product.getTitle());
+			_product.setSku(product.getSku());
+			_product.setCategory(product.getCategory());
+			_product.setDescription(product.getDescription());
+			_product.setUnitPrice(product.getUnitPrice());
+			_product.setImageUrl(product.getImageUrl());
+			_product.setActive(product.isActive());
+			_product.setUnitsInStock(product.getUnitsInStock());
+			_product.setPublished(product.isPublished());
+			return new ResponseEntity<>(productRepository.save(_product), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
+	//Delete product Working perfect
 	@DeleteMapping("/products/{id}")
 	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
 		try {
@@ -98,6 +107,7 @@ public class ProductController {
 		}
 	}
 
+	//Delete all products Working perfect
 	@DeleteMapping("/products")
 	public ResponseEntity<HttpStatus> deleteAllTutorials() {
 		try {

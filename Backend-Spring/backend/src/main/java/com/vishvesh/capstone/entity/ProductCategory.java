@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class ProductCategory {
     @Column(name = "category_name")
     private String categoryName;
     
-    @JsonManagedReference 
+    @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Product> products;
 

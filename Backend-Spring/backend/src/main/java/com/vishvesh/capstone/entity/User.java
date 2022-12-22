@@ -1,58 +1,129 @@
 package com.vishvesh.capstone.entity;
 
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Entity
-@Table(name="users")
-public class User
-{
-    private static final long serialVersionUID = 1L;
+@Table(name = "users", 
+    uniqueConstraints = { 
+      @UniqueConstraint(columnNames = "username"),
+      @UniqueConstraint(columnNames = "email") 
+    })
+public class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @NotBlank
+  @Size(max = 20)
+  private String firstname;
+  
+  @NotBlank
+  @Size(max = 20)
+  private String lastname;
+  
+  @NotBlank
+  @Size(max = 20)
+  private String username;
 
-    @Column(nullable=false)
-    private String firstname;
+  @NotBlank
+  @Size(max = 50)
+  @Email
+  private String email;
 
-    @Column(nullable=false)
-    private String lastname;
-    
-    @Column(nullable=false)
-    private String phonenumber;
-    
-    @Column(nullable=false, unique=true)
-    private String email;
+  @NotBlank
+  @Size(max = 120)
+  private String password;
+  
+  @NotBlank
+  @Size(max = 20)
+  private String phone;
 
-    @Column(nullable=false)
-    private String password;
-    
-    @Column(nullable=false)
-    private String accstatus;
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(  name = "user_roles", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinTable(
-            name="users_roles",
-            joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
-            inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
-    private List<Role> roles = new ArrayList<>();
-    
-    //@JsonBackReference
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "user_id")
-    private Set<Address> addresses;
+  public User() {
+  }
+
+  public User(String firstname, String lastname, String username, String email, String password, String phone) {
+	this.firstname = firstname;
+	this.lastname = lastname;
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.phone = phone;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getFirstname() {
+	return firstname;
 }
+
+public void setFirstname(String firstname) {
+	this.firstname = firstname;
+}
+
+public String getLastname() {
+	return lastname;
+}
+
+public void setLastname(String lastname) {
+	this.lastname = lastname;
+}
+
+public String getPhone() {
+	return phone;
+}
+
+public void setPhone(String phone) {
+	this.phone = phone;
+}
+
+public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
+}
+

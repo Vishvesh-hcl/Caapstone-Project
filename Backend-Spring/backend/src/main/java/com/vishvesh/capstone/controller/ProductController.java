@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,17 @@ import com.vishvesh.capstone.repository.ProductRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-//@RequestMapping("/api")
+@RequestMapping("/api/new")
 public class ProductController {
+
 
 	@Autowired
 	ProductRepository productRepository;
 
 	//Get all products Working perfect
+	//Working with ROLES.
 	@GetMapping("/products")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String title) {
 		try {
 			List<Product> products = new ArrayList<Product>();

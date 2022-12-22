@@ -1,78 +1,125 @@
 package com.vishvesh.capstone.service.impl;
 
-import com.vishvesh.capstone.dto.UserDto;
-import com.vishvesh.capstone.entity.Role;
-import com.vishvesh.capstone.entity.User;
-import com.vishvesh.capstone.repository.RoleRepository;
-import com.vishvesh.capstone.repository.UserRepository;
-import com.vishvesh.capstone.service.UserService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
-public class UserServiceImpl implements UserService {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
+import com.vishvesh.capstone.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+public class UserDetailsImpl implements UserDetails {
+  private static final long serialVersionUID = 1L;
 
-    @Override
-    public void saveUser(UserDto userDto) {
-        User user = new User();
-        user.setFirstname(userDto.getFirstName());
-        user.setLastname(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPhonenumber(userDto.getPhoneNumber());
-        user.setAccstatus(userDto.getAccStatus());
-        //encrypt the password once we integrate spring security
-        //user.setPassword(userDto.getPassword());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        Role role = roleRepository.findByName("ROLE_USER");
-        if(role == null){
-            role = checkRoleExist();
-        }
-        user.setRoles(Arrays.asList(role));
-        userRepository.save(user);
-    }
+  private Long id;
 
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
+  private String firstname;
+  
+  private String lastname;
+  
+  private String username;
 
-    @Override
-    public List<UserDto> findAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map((user) -> convertEntityToDto(user))
-                .collect(Collectors.toList());
-    }
+  private String email;
 
-    private UserDto convertEntityToDto(User user){
-        UserDto userDto = new UserDto();
-        //String[] name = user.getName().split(" ");
-        userDto.setFirstName(user.getFirstname());
-        userDto.setLastName(user.getLastname());
-        userDto.setEmail(user.getEmail());
-        userDto.setPhoneNumber(user.getPhonenumber());
-        userDto.setAccStatus(user.getAccstatus());
-        return userDto;
-    }
+  @JsonIgnore
+  private String password;
+  
+  private String phone;
 
-    private Role checkRoleExist() {
-        Role role = new Role();
-        role.setName("ROLE_USER");
-        return roleRepository.save(role);
-    }
+  private Collection<? extends GrantedAuthority> authorities;
+
+  public UserDetailsImpl(Long id, String firstname, String lastname, String username, String email, String password, String phone,
+      Collection<? extends GrantedAuthority> authorities) {
+    this.id = id;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.phone = phone;
+    this.authorities = authorities;
+  }
+
+  public static UserDetailsImpl build(User user) {
+    List<GrantedAuthority> authorities = user.getRoles().stream()
+        .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+        .collect(Collectors.toList());
+
+    return new UserDetailsImpl(
+        user.getId(), 
+        user.getFirstname(),
+        user.getLastname(),
+        user.getUsername(), 
+        user.getEmail(),
+        user.getPassword(),
+        user.getPhone(),
+        authorities);
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return authorities;
+  }
+
+  public Long getId() {
+    return id;
+  }
+  
+  public String getFirstname() {
+	    return firstname;
+	  }
+  public String getLastname() {
+	    return lastname;
+	  }
+  public String getPhone() {
+	    return phone;
+	  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  @Override
+  public String getUsername() {
+    return username;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    UserDetailsImpl user = (UserDetailsImpl) o;
+    return Objects.equals(id, user.id);
+  }
 }

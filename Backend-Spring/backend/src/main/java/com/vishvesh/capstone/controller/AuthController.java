@@ -31,6 +31,7 @@ import com.vishvesh.capstone.repository.RoleRepository;
 import com.vishvesh.capstone.repository.UserRepository;
 import com.vishvesh.capstone.security.jwt.JwtUtils;
 import com.vishvesh.capstone.service.impl.UserDetailsImpl;
+import com.vishvesh.capstone.service.impl.EmailService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -50,6 +51,9 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+  
+  @Autowired
+  public EmailService service;
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -87,7 +91,7 @@ public class AuthController {
     }
 
     // Create new user's account
-    User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), 
+    User user = new User(signUpRequest.getUsername(),signUpRequest.getFirstname(), signUpRequest.getLastname(), 
                signUpRequest.getEmail(),
                encoder.encode(signUpRequest.getPassword()), signUpRequest.getPhone());
 
@@ -117,7 +121,9 @@ public class AuthController {
 
     user.setRoles(roles);
     userRepository.save(user);
-
+    service.sendEMail(user.getEmail(), "New User Registration", "You registred successfully!" + user.getFirstname() +" "+ user.getLastname());
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    
+    
   }
 }

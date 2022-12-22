@@ -53,7 +53,7 @@ public class User {
   public User() {
   }
 
-  public User(String firstname, String lastname, String username, String email, String password, String phone) {
+  public User(String username, String firstname, String lastname, String email, String password, String phone) {
 	this.firstname = firstname;
 	this.lastname = lastname;
     this.username = username;

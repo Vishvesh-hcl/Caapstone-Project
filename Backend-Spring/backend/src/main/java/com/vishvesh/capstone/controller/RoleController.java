@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/test")
-public class TestController {
+public class RoleController {
   @GetMapping("/all")
   public String allAccess() {
     return "Public Content.";

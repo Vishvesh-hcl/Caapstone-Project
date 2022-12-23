@@ -53,32 +53,35 @@ public class ProductController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/products/{id}")
-	public ResponseEntity<Product> getTutorialById(@PathVariable("id") long id) {
-		Optional<Product> tutorialData = productRepository.findById(id);
+	public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
+		Optional<Product> productData = productRepository.findById(id);
 
-		if (tutorialData.isPresent()) {
-			return new ResponseEntity<>(tutorialData.get(), HttpStatus.OK);
+		if (productData.isPresent()) {
+			return new ResponseEntity<>(productData.get(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	//Add products Working perfect
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/products")
-	public ResponseEntity<Product> createTutorial(@RequestBody Product product) {
+	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
 		try {
-			Product _tutorial = productRepository
+			Product _product = productRepository
 					.save(new Product(product.getTitle(), product.getSku(), product.getCategory(), product.getDescription(), 
 							product.getUnitPrice(), product.getImageUrl(), true, product.getUnitsInStock(),
-						 	product.getDateCreated(), product.getLastUpdated(), false));
-			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
+						 	product.getDateCreated(), product.getLastUpdated()));
+			return new ResponseEntity<>(_product, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/products/{id}")
 	public ResponseEntity<Product> updateProduct(@PathVariable("id") long id, @RequestBody Product product) {
 		Optional<Product> productData = productRepository.findById(id);
@@ -93,7 +96,6 @@ public class ProductController {
 			_product.setImageUrl(product.getImageUrl());
 			_product.setActive(product.isActive());
 			_product.setUnitsInStock(product.getUnitsInStock());
-			_product.setPublished(product.isPublished());
 			return new ResponseEntity<>(productRepository.save(_product), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -101,8 +103,9 @@ public class ProductController {
 	}
 
 	//Delete product Working perfect
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/products/{id}")
-	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
+	public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("id") long id) {
 		try {
 			productRepository.deleteById(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -112,8 +115,9 @@ public class ProductController {
 	}
 
 	//Delete all products Working perfect
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/products")
-	public ResponseEntity<HttpStatus> deleteAllTutorials() {
+	public ResponseEntity<HttpStatus> deleteAllProducts() {
 		try {
 			productRepository.deleteAll();
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -121,20 +125,6 @@ public class ProductController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-	}
-
-	@GetMapping("/tutorials/published")
-	public ResponseEntity<List<Product>> findByPublished() {
-		try {
-			List<Product> products = productRepository.findByPublished(true);
-
-			if (products.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
-			return new ResponseEntity<>(products, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 	}
 
 }

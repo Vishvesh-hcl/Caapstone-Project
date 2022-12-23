@@ -52,15 +52,12 @@ public class Product {
     @UpdateTimestamp
     private Date lastUpdated;
 
-	@Column(name = "published")
-	private boolean published;
-
 	public Product() {
 
 	}
 
 	public Product(String title, String sku, ProductCategory category, String description, BigDecimal unitPrice, String imageUrl, boolean active, 
-			int unitsInStock, Date dateCreated, Date lastUpdated, boolean published) {
+			int unitsInStock, Date dateCreated, Date lastUpdated) {
 		this.title = title;
 		this.sku = sku;
 		this.category = category;
@@ -71,7 +68,6 @@ public class Product {
 		this.unitsInStock = unitsInStock;
 		this.dateCreated = dateCreated;
 		this.lastUpdated = lastUpdated;
-		this.published = published;
 	}
 	
 	public long getId() {
@@ -156,20 +152,19 @@ public class Product {
 		this.lastUpdated = lastUpdated;
 	}
 
-	public boolean isPublished() {
-		return published;
-	}
-
-	public void setPublished(boolean isPublished) {
-		this.published = isPublished;
-	}
+//	public boolean isPublished() {
+//		return published;
+//	}
+//
+//	public void setPublished(boolean isPublished) {
+//		this.published = isPublished;
+//	}
 
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", title=" + title + ", SKU="+ sku +", category="+category+", desc=" + description + ", UnitPrice="+unitPrice+", "
 				+ "imageURL="+imageUrl+", active="+active+","
-						+ " unitsInStock="+unitsInStock+", dateCreated="+dateCreated+", lastUpdated="+lastUpdated+", "
-								+ "published=" + published + "]";
+						+ " unitsInStock="+unitsInStock+", dateCreated="+dateCreated+", lastUpdated="+lastUpdated+ "]";
 	}
 
 }

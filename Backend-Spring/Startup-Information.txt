@@ -1,0 +1,10 @@
+Before running the prograam, run following command in MySQL.
+
+CREATE DATABASE ecommerce;
+
+After running the program, it will create all required tables in ecommerce database and run following command in MySQL.
+
+INSERT INTO roles(name) VALUES('ROLE_USER');
+INSERT INTO roles(name) VALUES('ROLE_ADMIN');
+
+Also, change the mail strap info.

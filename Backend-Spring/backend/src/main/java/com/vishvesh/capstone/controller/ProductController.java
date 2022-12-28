@@ -34,7 +34,7 @@ public class ProductController {
 	//Get all products Working perfect
 	//Working with ROLES.
 	@GetMapping("/products")
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false) String title) {
 		try {
 			List<Product> products = new ArrayList<Product>();
